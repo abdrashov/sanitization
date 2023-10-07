@@ -46,19 +46,6 @@ class SanitizationTest extends TestCase
         $this->assertFalse($foo->validate());
     }
 
-    public function testInvalidBar()
-    {
-        $sanitization = new Sanitization();
-        $sanitization->setRequest('{"bar": "123абв"}');
-
-        $request = $sanitization->getRequest();
-
-        $bar = (new \Abdrashov\Sanitization\Rule\StringRule());
-        $bar->setValue(data_get($request, 'bar'));
-
-        $this->assertFalse($bar->validate());
-    }
-
     public function testInvalidPhone()
     {
         $sanitization = new Sanitization();

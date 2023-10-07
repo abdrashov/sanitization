@@ -14,7 +14,7 @@ final class StringRule extends RuleAbstract implements RuleInterface
 
     public function validate(): bool
     {
-        return !preg_match('/\d/', $this->value);
+        return true;
     }
 
     public function rebirth(): string

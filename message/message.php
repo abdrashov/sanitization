@@ -12,7 +12,6 @@ return [
         'message' => 'The given data was invalid.',
         'required' => 'The ":attribute" is required.',
         'numeric' => 'The ":attribute" must be numeric.',
-        'string' => 'The ":attribute" must be a string.',
-        'phone' => 'The ":attribute" must have the format +7 (***) ***-**-**.',
+        'phone' => 'The ":attribute" must have the format +8 (***) ***-**-**.',
     ]
 ];
