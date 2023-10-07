@@ -2,7 +2,6 @@
 
 namespace Abdrashov\Sanitization\Validation;
 
-use Abdrashov\Sanitization\Exception\ValidationException;
 use Abdrashov\Sanitization\Rule\Interface\RuleInterface;
 
 class SanitizationValidation

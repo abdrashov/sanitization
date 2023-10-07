@@ -2,7 +2,6 @@
 
 namespace Abdrashov\Sanitization\Exception;
 
-use Exception;
 use InvalidArgumentException;
 
 class ValidationException extends InvalidArgumentException
