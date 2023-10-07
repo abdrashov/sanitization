@@ -8,7 +8,14 @@ use Abdrashov\Sanitization\Validation\SanitizationValidation;
 class Sanitization
 {
     protected array $request;
+
     protected SanitizationValidation $validation;
+
+    protected array $rules = [
+        'phone' => \Abdrashov\Sanitization\Rule\PhoneRule::class,
+        'numeric' => \Abdrashov\Sanitization\Rule\NumericRule::class,
+        'string' => \Abdrashov\Sanitization\Rule\StringRule::class,
+    ];
 
     public function __construct()
     {
@@ -27,13 +34,12 @@ class Sanitization
 
     public function make(): void
     {
-        foreach (glob('src/Rule/*Rule.php') as $ruleClass) {
+        foreach ($this->rules as $type => $ruleClass) {
             $ruleClass = extract_class($ruleClass);
 
             $this->validation->setRule(new $ruleClass);
 
             $attribute = $this->validation->rule()->attribute();
-            $type = $this->validation->rule()->type();
 
             if ($value = data_get($this->request, $attribute)) {
                 $this->validation->setValue($value);

@@ -7,11 +7,6 @@ use Abdrashov\Sanitization\Rule\Interface\RuleInterface;
 
 final class StringRule extends RuleAbstract implements RuleInterface
 {
-    public function type(): string
-    {
-        return 'string';
-    }
-
     public function attribute(): string
     {
         return 'bar';

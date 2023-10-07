@@ -7,11 +7,6 @@ use Abdrashov\Sanitization\Rule\Interface\RuleInterface;
 
 final class NumericRule extends RuleAbstract implements RuleInterface
 {
-    public function type(): string
-    {
-        return 'numeric';
-    }
-
     public function attribute(): string
     {
         return 'foo';

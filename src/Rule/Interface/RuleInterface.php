@@ -4,8 +4,6 @@ namespace Abdrashov\Sanitization\Rule\Interface;
 
 interface RuleInterface
 {
-    public function type(): string;
-
     public function attribute(): string;
 
     public function validate(): bool;
