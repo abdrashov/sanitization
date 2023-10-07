@@ -1,5 +1,5 @@
 {
-  "name": "abdrashov/validation",
+  "name": "abdrashov/sanitization",
   "type": "library",
   "autoload": {
     "psr-4": {
