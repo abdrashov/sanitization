@@ -7,9 +7,9 @@ use Abdrashov\Sanitization\Rule\Interface\RuleInterface;
 
 final class PhoneRule extends RuleAbstract implements RuleInterface
 {
-    public function attribute(): string
+    public function type(): string
     {
-        return 'baz';
+        return 'phone';
     }
 
     public function validate(): bool

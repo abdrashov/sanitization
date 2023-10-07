@@ -17,7 +17,7 @@ class SanitizationTest extends TestCase
 
         $this->assertIsFloat(data_get($request, 'foo'));
         $this->assertIsString(data_get($request, 'bar'));
-        $this->assertIsString(data_get($request, 'baz'));
+        $this->assertEquals('77072885623', data_get($request, 'baz'));
     }
 
     public function testFooIntBarStringBazString(): void
@@ -30,6 +30,65 @@ class SanitizationTest extends TestCase
 
         $this->assertIsInt(data_get($request, 'foo'));
         $this->assertIsString(data_get($request, 'bar'));
-        $this->assertIsString(data_get($request, 'baz'));
+        $this->assertEquals('77072885623', data_get($request, 'baz'));
+    }
+
+    public function testInvalidFoo()
+    {
+        $sanitization = new Sanitization();
+        $sanitization->setRequest('{"foo": "12sds3"}');
+
+        $request = $sanitization->getRequest();
+
+        $foo = (new \Abdrashov\Sanitization\Rule\NumericRule());
+        $foo->setValue(data_get($request, 'foo'));
+
+        $this->assertFalse($foo->validate());
+    }
+
+    public function testInvalidBar()
+    {
+        $sanitization = new Sanitization();
+        $sanitization->setRequest('{"bar": "123абв"}');
+
+        $request = $sanitization->getRequest();
+
+        $bar = (new \Abdrashov\Sanitization\Rule\StringRule());
+        $bar->setValue(data_get($request, 'bar'));
+
+        $this->assertFalse($bar->validate());
+    }
+
+    public function testInvalidPhone()
+    {
+        $sanitization = new Sanitization();
+        $sanitization->setRequest('{"baz": "260557"}');
+
+        $request = $sanitization->getRequest();
+
+        $baz = (new \Abdrashov\Sanitization\Rule\PhoneRule());
+        $baz->setValue(data_get($request, 'baz'));
+
+        $this->assertFalse($baz->validate());
+    }
+
+    public function testInvalidFields()
+    {
+        $sanitization = new Sanitization();
+        $sanitization->setRequest('{"foo": "", "bar": "", "baz": ""}');
+
+        $request = $sanitization->getRequest();
+
+        $foo = (new \Abdrashov\Sanitization\Rule\NumericRule());
+        $foo->setValue(data_get($request, 'foo'));
+        $this->assertFalse($foo->validate());
+
+        $bar = (new \Abdrashov\Sanitization\Rule\StringRule());
+        $bar->setValue(data_get($request, 'bar'));
+        $this->assertTrue($bar->validate());
+
+        $baz = (new \Abdrashov\Sanitization\Rule\PhoneRule());
+        $baz->setValue(data_get($request, 'baz'));
+        $this->assertFalse($baz->validate());
     }
 }

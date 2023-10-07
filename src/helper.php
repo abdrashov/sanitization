@@ -9,12 +9,12 @@ function data_get(array $data, string $key, string $default = ''): mixed
     return $data[$key];
 }
 
-function message(string $values, string $attribute = ''): string
+function message(string $keys, string $attribute = ''): string
 {
     $messages = include __DIR__ . '/../message/message.php';
 
-    foreach (explode('.', $values) as $value) {
-        $messages = data_get($messages, $value);
+    foreach (explode('.', $keys) as $key) {
+        $messages = data_get($messages, $key);
 
         if (is_string($messages)) {
             break;
@@ -22,11 +22,4 @@ function message(string $values, string $attribute = ''): string
     }
 
     return str_replace(':attribute', $attribute, $messages);
-}
-
-function extract_class(string $className): string
-{
-    return str_replace(['/', '.php'], ['\\', ''],
-        preg_replace('/^src\//', 'Abdrashov/Sanitization/', $className)
-    );
 }

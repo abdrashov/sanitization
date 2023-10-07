@@ -12,9 +12,9 @@ class Sanitization
     protected SanitizationValidation $validation;
 
     protected array $rules = [
-        'phone' => \Abdrashov\Sanitization\Rule\PhoneRule::class,
-        'numeric' => \Abdrashov\Sanitization\Rule\NumericRule::class,
-        'string' => \Abdrashov\Sanitization\Rule\StringRule::class,
+        'baz' => \Abdrashov\Sanitization\Rule\PhoneRule::class,
+        'foo' => \Abdrashov\Sanitization\Rule\NumericRule::class,
+        'bar' => \Abdrashov\Sanitization\Rule\StringRule::class,
     ];
 
     public function __construct()
@@ -34,12 +34,8 @@ class Sanitization
 
     public function make(): void
     {
-        foreach ($this->rules as $type => $ruleClass) {
-            $ruleClass = extract_class($ruleClass);
-
+        foreach ($this->rules as $attribute => $ruleClass) {
             $this->validation->setRule(new $ruleClass);
-
-            $attribute = $this->validation->rule()->attribute();
 
             if ($value = data_get($this->request, $attribute)) {
                 $this->validation->setValue($value);
@@ -51,9 +47,14 @@ class Sanitization
             if ($this->validation->rule()->validate())
                 $this->request[$attribute] = $this->validation->rule()->rebirth();
             else
-                $this->validation->setException($type, $attribute);
+                $this->validation->setException($this->validation->rule()->type(), $attribute);
         }
 
+        $this->throwException();
+    }
+
+    protected function throwException(): void
+    {
         try {
             if (!empty($this->validation->getException()))
                 throw new ValidationException($this->validation->getException());
@@ -67,6 +68,8 @@ class Sanitization
                 'message' => message('error.message'),
                 'errors' => $e->getErrors()
             ]);
+
+            exit();
         }
     }
 }

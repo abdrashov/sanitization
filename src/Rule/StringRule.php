@@ -7,9 +7,9 @@ use Abdrashov\Sanitization\Rule\Interface\RuleInterface;
 
 final class StringRule extends RuleAbstract implements RuleInterface
 {
-    public function attribute(): string
+    public function type(): string
     {
-        return 'bar';
+        return 'string';
     }
 
     public function validate(): bool

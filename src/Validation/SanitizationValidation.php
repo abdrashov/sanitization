@@ -29,7 +29,7 @@ class SanitizationValidation
 
     public function setException($type, $attribute): void
     {
-        $this->exception[$type] = message('error.' . $type, $attribute);
+        $this->exception[$attribute] = message('error.' . $type, $attribute);
     }
 
     public function getException(): array
