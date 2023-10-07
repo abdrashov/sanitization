@@ -1,6 +1,6 @@
 <?php
 
-function data_get(array $data, string|int $key, string|int|float|null $default = null): mixed
+function data_get(array $data, string $key, string $default = ''): mixed
 {
     if (!array_key_exists($key, $data)) {
         return $default;
@@ -9,13 +9,11 @@ function data_get(array $data, string|int $key, string|int|float|null $default =
     return $data[$key];
 }
 
-function validation_message(string $rule, string $field = ''): mixed
+function message(string $rule, string $field = ''): string
 {
-    $validations = include __DIR__ . '/Validation/message.php';
+    $validations = include __DIR__ . '/message/message.php';
 
-    $message = data_get($validations, $rule);
-
-    $message = str_replace(':field', $field, $message);
-
-    return $message;
+    return str_replace(':field', $field,
+        data_get($validations, $rule)
+    );
 }

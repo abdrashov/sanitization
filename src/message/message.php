@@ -8,8 +8,9 @@
 //];
 
 return [
-    'required' => ':field is required.',
-    'numeric' => ':field must be numeric.',
-    'string' => ':field must be a string.',
-    'phone' => ':field must have the format +7 (***) ***-**-**.',
+    'error' => 'The given data was invalid.',
+    'required' => 'The ":field" is required.',
+    'numeric' => 'The ":field" must be numeric.',
+    'string' => 'The ":field" must be a string.',
+    'phone' => 'The ":field" must have the format +7 (***) ***-**-**.',
 ];

@@ -2,10 +2,9 @@
 
 namespace Abdrashov\Sanitization;
 
-use Abdrashov\Sanitization\Interface\SanitizationInterface;
 use Abdrashov\Sanitization\Validation\SanitizationValidation;
 
-class Sanitization implements SanitizationInterface
+class Sanitization
 {
     private array $request;
 

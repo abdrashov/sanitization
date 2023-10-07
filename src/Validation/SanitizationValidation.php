@@ -40,7 +40,20 @@ class SanitizationValidation
         }
 
         if (!empty($validations)) {
-            ValidationException::message($validations, 422);
+            try {
+                throw new ValidationException($validations);
+            } catch (ValidationException $e) {
+                http_response_code($e->getStatus());
+
+                header('Content-Type: application/json');
+                echo json_encode([
+                    'status' => 'error',
+                    'code' => $e->getStatus(),
+                    'message' => $e->getMessage(),
+                    'errors' => $e->getErrors()
+                ]);
+                exit;
+            }
         }
 
         return $this->request;

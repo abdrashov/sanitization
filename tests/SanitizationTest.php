@@ -2,7 +2,6 @@
 
 namespace Abdrashov\Sanitization\Test;
 
-use Abdrashov\Sanitization\Exception\ValidationException;
 use Abdrashov\Sanitization\Sanitization;
 use PHPUnit\Framework\TestCase;
 
@@ -15,6 +14,8 @@ class SanitizationTest extends TestCase
         $sanitization->validated();
 
         $this->assertIsFloat($sanitization->getRequest()['foo']);
+        $this->assertIsString($sanitization->getRequest()['bar']);
+        $this->assertIsString($sanitization->getRequest()['baz']);
     }
 
     public function testSendIntFoo(): void
@@ -24,15 +25,7 @@ class SanitizationTest extends TestCase
         $sanitization->validated();
 
         $this->assertIsInt($sanitization->getRequest()['foo']);
+        $this->assertIsString($sanitization->getRequest()['bar']);
+        $this->assertIsString($sanitization->getRequest()['baz']);
     }
-
-    public function testSendStringFoo(): void
-    {
-        $sanitization = new Sanitization();
-        $sanitization->setRequest('{"foo": "596sadsa262", "bar": "asasdsd", "baz": "8 (707) 288-56-23"}');
-        $sanitization->validated();
-
-        $this->expectExceptionCode(422);
-    }
-
 }

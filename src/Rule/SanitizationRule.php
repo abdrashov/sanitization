@@ -24,7 +24,7 @@ class SanitizationRule
         if (empty($value))
             return [
                 'status' => static::ERROR,
-                'message' => validation_message('required', $field)
+                'message' => message('required', $field)
             ];
 
         return [
@@ -38,7 +38,7 @@ class SanitizationRule
         if (!is_numeric($value) && !empty($value))
             return [
                 'status' => static::ERROR,
-                'message' => validation_message('numeric', $field)
+                'message' => message('numeric', $field)
             ];
 
         return [
@@ -52,7 +52,7 @@ class SanitizationRule
         if (preg_match('/\d/', $value) && !empty($value))
             return [
                 'status' => static::ERROR,
-                'message' => validation_message('string', $field)
+                'message' => message('string', $field)
             ];
 
         return [
@@ -66,7 +66,7 @@ class SanitizationRule
         if (!preg_match('/^8 \(\d{3}\) \d{3}-\d{2}-\d{2}$/', $value) && !empty($value))
             return [
                 'status' => static::ERROR,
-                'message' => validation_message('phone', $field)
+                'message' => message('phone', $field)
             ];
 
         return [
