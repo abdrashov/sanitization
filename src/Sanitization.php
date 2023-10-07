@@ -44,14 +44,14 @@ class Sanitization
             if ($value = data_get($this->request, $attribute)) {
                 $this->validation->setValue($value);
             } else {
-                $this->validation->setException(message('error.required', $attribute));
+                $this->validation->setException('required', $attribute);
                 continue;
             }
 
             if ($this->validation->rule()->validate())
                 $this->request[$attribute] = $this->validation->rule()->rebirth();
             else
-                $this->validation->setException(message('error.' . $type, $attribute));
+                $this->validation->setException($type, $attribute);
         }
 
         try {

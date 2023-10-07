@@ -27,9 +27,9 @@ class SanitizationValidation
         return $this->rule;
     }
 
-    public function setException($message): void
+    public function setException($type, $attribute): void
     {
-        $this->exception[] = $message;
+        $this->exception[$type] = message('error.' . $type, $attribute);
     }
 
     public function getException(): array
