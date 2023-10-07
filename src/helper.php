@@ -9,11 +9,24 @@ function data_get(array $data, string $key, string $default = ''): mixed
     return $data[$key];
 }
 
-function message(string $rule, string $field = ''): string
+function message(string $values, string $attribute = ''): string
 {
-    $validations = include __DIR__ . '/message/message.php';
+    $messages = include __DIR__ . '/../message/message.php';
 
-    return str_replace(':field', $field,
-        data_get($validations, $rule)
+    foreach (explode('.', $values) as $value) {
+        $messages = data_get($messages, $value);
+
+        if (is_string($messages)) {
+            break;
+        }
+    }
+
+    return str_replace(':attribute', $attribute, $messages);
+}
+
+function extract_class(string $className): string
+{
+    return str_replace(['/', '.php'], ['\\', ''],
+        preg_replace('/^src\//', 'Abdrashov/Sanitization/', $className)
     );
 }

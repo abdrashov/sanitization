@@ -3,59 +3,37 @@
 namespace Abdrashov\Sanitization\Validation;
 
 use Abdrashov\Sanitization\Exception\ValidationException;
-use Abdrashov\Sanitization\Rule\SanitizationRule;
-use Exception;
+use Abdrashov\Sanitization\Rule\Interface\RuleInterface;
 
 class SanitizationValidation
 {
-    private array $fields;
-    private array $request;
+    protected string $value;
+    protected array $exception = [];
+    protected RuleInterface $rule;
 
-    public function __construct(array $fields, array $request)
+    public function setRule(RuleInterface $rule): void
     {
-        $this->fields = $fields;
-        $this->request = $request;
+        $this->rule = $rule;
     }
 
-    public function apply(): array
+    public function setValue(string $value): void
     {
-        $validations = [];
+        $this->value = $value;
+        $this->rule->setValue($value);
+    }
 
-        foreach ($this->fields as $field => $rules) {
-            foreach ($rules as $rule) {
-                if (!method_exists(SanitizationRule::class, $rule)) {
-                    throw new Exception('Validate method does not exist.', 500);
-                }
+    public function rule(): RuleInterface
+    {
+        return $this->rule;
+    }
 
-                $sanitizationRule = new SanitizationRule;
-                $sanitizationRule = $sanitizationRule->{$rule}($field, data_get($this->request, $field));
+    public function setException($message): void
+    {
+        $this->exception[] = $message;
+    }
 
-                if (!$sanitizationRule['status']) {
-                    $validations[] = $sanitizationRule['message'];
-                    break;
-                }
-
-                $this->request[$field] = $sanitizationRule['message'];
-            }
-        }
-
-        if (!empty($validations)) {
-            try {
-                throw new ValidationException($validations);
-            } catch (ValidationException $e) {
-                http_response_code($e->getStatus());
-
-                header('Content-Type: application/json');
-                echo json_encode([
-                    'status' => 'error',
-                    'code' => $e->getStatus(),
-                    'message' => $e->getMessage(),
-                    'errors' => $e->getErrors()
-                ]);
-                exit;
-            }
-        }
-
-        return $this->request;
+    public function getException(): array
+    {
+        return $this->exception;
     }
 }

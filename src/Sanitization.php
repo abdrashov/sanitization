@@ -2,11 +2,18 @@
 
 namespace Abdrashov\Sanitization;
 
+use Abdrashov\Sanitization\Exception\ValidationException;
 use Abdrashov\Sanitization\Validation\SanitizationValidation;
 
 class Sanitization
 {
-    private array $request;
+    protected array $request;
+    protected SanitizationValidation $validation;
+
+    public function __construct()
+    {
+        $this->validation = new SanitizationValidation;
+    }
 
     public function setRequest(string $request): void
     {
@@ -18,14 +25,42 @@ class Sanitization
         return $this->request;
     }
 
-    public function validated(): void
+    public function make(): void
     {
-        $validation = new SanitizationValidation([
-            'foo' => ['trim', 'required', 'numeric'],
-            'bar' => ['trim', 'required', 'string'],
-            'baz' => ['trim', 'required', 'phone'],
-        ], $this->request);
+        foreach (glob('src/Rule/*Rule.php') as $ruleClass) {
+            $ruleClass = extract_class($ruleClass);
 
-        $this->request = $validation->apply();
+            $this->validation->setRule(new $ruleClass);
+
+            $attribute = $this->validation->rule()->attribute();
+            $type = $this->validation->rule()->type();
+
+            if ($value = data_get($this->request, $attribute)) {
+                $this->validation->setValue($value);
+            } else {
+                $this->validation->setException(message('error.required', $attribute));
+                continue;
+            }
+
+            if ($this->validation->rule()->validate())
+                $this->request[$attribute] = $this->validation->rule()->rebirth();
+            else
+                $this->validation->setException(message('error.' . $type, $attribute));
+        }
+
+        try {
+            if (!empty($this->validation->getException()))
+                throw new ValidationException($this->validation->getException());
+        } catch (ValidationException $e) {
+            http_response_code($e->getStatus());
+
+            header('Content-Type: application/json');
+
+            echo json_encode([
+                'code' => $e->getStatus(),
+                'message' => message('error.message'),
+                'errors' => $e->getErrors()
+            ]);
+        }
     }
 }

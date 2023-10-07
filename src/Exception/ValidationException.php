@@ -3,26 +3,27 @@
 namespace Abdrashov\Sanitization\Exception;
 
 use Exception;
+use InvalidArgumentException;
 
-class ValidationException extends Exception
+class ValidationException extends InvalidArgumentException
 {
+    protected array $errors;
     protected int $status = 422;
-    protected array $errors = [];
 
-    public function __construct(array $errors, string $message = '', int $code = 0, Exception $previous = null)
+    public function __construct(array $errors, string $message = '')
     {
-        parent::__construct(message('error'), $this->status, $previous);
+        parent::__construct(message('error.message'));
 
         $this->errors = $errors;
-    }
-
-    public function getStatus(): int
-    {
-        return $this->status;
     }
 
     public function getErrors(): array
     {
         return $this->errors;
+    }
+
+    public function getStatus(): int
+    {
+        return $this->status;
     }
 }

@@ -7,25 +7,29 @@ use PHPUnit\Framework\TestCase;
 
 class SanitizationTest extends TestCase
 {
-    public function testSendFloatFoo(): void
+    public function testFooFloatBarStringBazString(): void
     {
         $sanitization = new Sanitization();
-        $sanitization->setRequest('{"foo": "59659.5", "bar": "asasdsd", "baz": "8 (707) 288-56-23"}');
-        $sanitization->validated();
+        $sanitization->setRequest('{"foo": "123.123", "bar": "asd", "baz": "8 (707) 288-56-23"}');
+        $sanitization->make();
 
-        $this->assertIsFloat($sanitization->getRequest()['foo']);
-        $this->assertIsString($sanitization->getRequest()['bar']);
-        $this->assertIsString($sanitization->getRequest()['baz']);
+        $request = $sanitization->getRequest();
+
+        $this->assertIsFloat(data_get($request, 'foo'));
+        $this->assertIsString(data_get($request, 'bar'));
+        $this->assertIsString(data_get($request, 'baz'));
     }
 
-    public function testSendIntFoo(): void
+    public function testFooIntBarStringBazString(): void
     {
         $sanitization = new Sanitization();
-        $sanitization->setRequest('{"foo": "5965", "bar": "asasdsd", "baz": "8 (707) 288-56-23"}');
-        $sanitization->validated();
+        $sanitization->setRequest('{"foo": "123", "bar": "asd", "baz": "8 (707) 288-56-23"}');
+        $sanitization->make();
 
-        $this->assertIsInt($sanitization->getRequest()['foo']);
-        $this->assertIsString($sanitization->getRequest()['bar']);
-        $this->assertIsString($sanitization->getRequest()['baz']);
+        $request = $sanitization->getRequest();
+
+        $this->assertIsInt(data_get($request, 'foo'));
+        $this->assertIsString(data_get($request, 'bar'));
+        $this->assertIsString(data_get($request, 'baz'));
     }
 }
